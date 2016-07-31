@@ -1,0 +1,6 @@
+use_frameworks!
+target 'MBJSONMapper_Tests' do
+  pod 'MBJSONMapper', :path => '../'
+  
+  
+end

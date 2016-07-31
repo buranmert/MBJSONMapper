@@ -1,5 +1,7 @@
 PODS:
-  - MBJSONMapper (0.1.0)
+  - AutoCoding (2.2.2)
+  - MBJSONMapper (0.1.0):
+    - AutoCoding (~> 2.2.2)
 
 DEPENDENCIES:
   - MBJSONMapper (from `../`)
@@ -9,7 +11,8 @@ EXTERNAL SOURCES:
     :path: "../"
 
 SPEC CHECKSUMS:
-  MBJSONMapper: cc1126651ddd3c439fdcd658281d942ccff8b634
+  AutoCoding: 56fa46dbfa89d44189a26ce64e6a470ed8ff4661
+  MBJSONMapper: 5b0bd3e8caef9c6b2ba00b539f8fec2200ef9098
 
 PODFILE CHECKSUM: 6a9f82b3e819ee7f63203c0b69244c6f48382e0a
 

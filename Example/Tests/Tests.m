@@ -8,6 +8,9 @@
 
 @import XCTest;
 
+#import <MBJSONMapper/MBJSONMapper.h>
+#import "MBTestDataModel.h"
+
 @interface Tests : XCTestCase
 
 @end
@@ -26,9 +29,34 @@
     [super tearDown];
 }
 
-- (void)testExample
+- (void)testDataModel
 {
-    XCTFail(@"No implementation for \"%s\"", __PRETTY_FUNCTION__);
+//    @property (nonatomic, copy, readonly) NSString *name;
+//    @property (nonatomic, copy, readonly) NSString *surname;
+//    @property (nonatomic, copy, readonly) NSString *middleName;
+//    
+//    @property (nonatomic, copy, readonly) MBTestDataModel *nestedModel;
+//    @property (nonatomic, copy, readonly) NSArray<MBTestDataModel*> *nestedModels;
+    
+    NSDictionary *nestedModelDict = dict(@"John", @"Dupont", @"");
+    NSArray *nestedModelDicts = @[dict(@"John", @"Dupont", @"1"),
+                                  dict(@"John", @"Dupont", @"2"),
+                                  dict(@"John", @"Dupont", @"3")];
+    NSMutableDictionary *mutableTestModelDict = [dict(@"John", @"Appleseed", @"Hatice") mutableCopy];
+    [mutableTestModelDict setObject:nestedModelDict forKey:@"nestedModel"];
+    [mutableTestModelDict setObject:nestedModelDicts forKey:@"nestedModels"];
+    NSDictionary *testModelDict = [mutableTestModelDict copy];
+    MBTestDataModel *testModel = [MBJSONMapper serializeDictionary:testModelDict intoObjectOfClass:[MBTestDataModel class]];
+    XCTAssertNotNil(testModel);
+    XCTAssert([testModel.name isEqualToString:@"John"]);
+    NSDictionary *deserializedTestModelDict = [MBJSONMapper deserializeObjectIntoDictionary:testModel];
+    XCTAssert(deserializedTestModelDict.allKeys.count == testModelDict.allKeys.count);
+}
+
+static NSDictionary* dict(NSString *name, NSString *surname, NSString *middleName) {
+    return @{@"name": name,
+             @"surname": surname,
+             @"middleName": middleName};
 }
 
 @end

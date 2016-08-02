@@ -13,7 +13,9 @@
 
 @property (nonatomic, copy, readonly) NSString *name;
 @property (nonatomic, copy, readonly) NSString *surname;
-@property (nonatomic, copy, readonly) NSString *middleName;
+@property (nonatomic, copy, readonly) NSString *secondName;
+
+@property (nonatomic, copy, readonly) NSString *nestedModelName;
 
 @property (nonatomic, copy, readonly) MBTestDataModel *nestedModel;
 @property (nonatomic, copy, readonly) NSArray<MBTestDataModel*> *nestedModels;

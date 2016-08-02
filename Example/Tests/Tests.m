@@ -38,7 +38,7 @@
 //    @property (nonatomic, copy, readonly) MBTestDataModel *nestedModel;
 //    @property (nonatomic, copy, readonly) NSArray<MBTestDataModel*> *nestedModels;
     
-    NSDictionary *nestedModelDict = dict(@"John", @"Dupont", @"");
+    NSDictionary *nestedModelDict = dict(@"Nested", @"John", @"");
     NSArray *nestedModelDicts = @[dict(@"John", @"Dupont", @"1"),
                                   dict(@"John", @"Dupont", @"2"),
                                   dict(@"John", @"Dupont", @"3")];

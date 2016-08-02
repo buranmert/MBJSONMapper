@@ -90,15 +90,17 @@
         NSDictionary *nestedDictionary = [nestedModel respondsToSelector:@selector(rawDictionaryFromModel)] ? [nestedModel rawDictionaryFromModel] : [nestedModel dictionaryRepresentation];
         [dictionaryRepresentation setObject:nestedDictionary forKey:key];
     }];
-    NSAssert([self safe_reverseKeyTransformationBlockDictionary].count == [self safe_keyTransformationBlockDictionary].count, @"AGBaseDataModel: keyTransformations and reverseKeyTransformations do not match!");
+    NSAssert([self safe_reverseKeyTransformationBlockDictionary].count == [self safe_keyTransformationBlockDictionary].count, @"MBJSONSerializable: keyTransformations and reverseKeyTransformations do not match!");
     [[self safe_reverseKeyTransformationBlockDictionary] enumerateKeysAndObjectsUsingBlock:^(NSString * _Nonnull key, MBTransformationBlock  _Nonnull obj, BOOL * _Nonnull stop) {
         id value = [self valueForKeyPath:key];
         id newValue = obj(value);
         [dictionaryRepresentation setObject:newValue forKey:key];
     }];
     [[self safe_keyPropertyMappingDictionary] enumerateKeysAndObjectsUsingBlock:^(NSString * _Nonnull key, NSString * _Nonnull obj, BOOL * _Nonnull stop) {
-        id value = [self valueForKeyPath:key];
-        [dictionaryRepresentation setObject:value forKey:key];
+        if ([key containsString:@"."]) {
+            id value = [self valueForKeyPath:obj];
+            [dictionaryRepresentation setObject:value forKey:key];
+        }
         [dictionaryRepresentation removeObjectForKey:obj];
     }];
     return [dictionaryRepresentation copy];
@@ -145,18 +147,15 @@
 }
 
 static NSDictionary<NSString *,id> *mapKeysFromKeyedValues(NSDictionary<NSString *,id> *keyedValues, NSDictionary<NSString*, NSString*> *mappingDictionary) {
-    NSMutableDictionary *mappedDictionary = [NSMutableDictionary dictionary];
-    for (NSString *key in keyedValues.allKeys) {
-        id obj = [keyedValues objectForKey:key];
-        NSString *mappedKey = [mappingDictionary objectForKey:key];
-        if (mappedKey != nil) {
-            [mappedDictionary setObject:obj forKey:mappedKey];
+    NSMutableDictionary *mappedDict = [keyedValues mutableCopy];
+    [mappingDictionary enumerateKeysAndObjectsUsingBlock:^(NSString * _Nonnull key, NSString * _Nonnull obj, BOOL * _Nonnull stop) {
+        id mappedValue = [keyedValues valueForKeyPath:key];
+        [mappedDict removeObjectForKey:key];
+        if (mappedValue != nil) {
+            [mappedDict setObject:mappedValue forKey:obj];
         }
-        else {
-            [mappedDictionary setObject:obj forKey:key];
-        }
-    }
-    return [NSDictionary dictionaryWithDictionary:mappedDictionary];
+    }];
+    return [mappedDict copy];
 }
 
 @end

@@ -10,6 +10,11 @@
 
 @implementation MBTestDataModel
 
+- (NSDictionary<NSString*, NSString*> *)keyPropertyMappingDictionary {
+    return @{@"nestedModel.name": NSStringFromSelector(@selector(nestedModelName)),
+             @"middleName":  NSStringFromSelector(@selector(secondName))};
+}
+
 - (NSDictionary<NSString*, Class> *)keyClassMappingDictionary {
     return @{NSStringFromSelector(@selector(nestedModel)): [MBTestDataModel class],
              NSStringFromSelector(@selector(nestedModels)): [MBTestDataModel class]};

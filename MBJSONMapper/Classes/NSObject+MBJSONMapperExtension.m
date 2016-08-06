@@ -8,7 +8,7 @@
 
 #import <MBJSONMapper/NSObject+MBJSONMapperExtension.h>
 #import <MBJSONMapper/MBJSONSerializable.h>
-#import <AutoCoding/AutoCoding.h>
+#import <objc/runtime.h>
 
 @implementation NSObject (MBJSONMapperExtension)
 
@@ -83,11 +83,11 @@
     return [NSArray arrayWithArray:newObjects];
 }
 
-- (NSDictionary *)rawDictionaryFromModel {
+- (NSDictionary *)dictionaryFromModel {
     NSMutableDictionary *dictionaryRepresentation = [[self dictionaryRepresentation] mutableCopy];
     [[[self class] safe_keyClassMappingDictionary] enumerateKeysAndObjectsUsingBlock:^(NSString * _Nonnull key, Class  _Nonnull obj, BOOL * _Nonnull stop) {
         id nestedModel = [self valueForKeyPath:key];
-        NSDictionary *nestedDictionary = [nestedModel respondsToSelector:@selector(rawDictionaryFromModel)] ? [nestedModel rawDictionaryFromModel] : [nestedModel dictionaryRepresentation];
+        NSDictionary *nestedDictionary = [nestedModel respondsToSelector:@selector(dictionaryFromModel)] ? [nestedModel dictionaryFromModel] : [nestedModel dictionaryRepresentation];
         [dictionaryRepresentation setObject:nestedDictionary forKey:key];
     }];
     NSAssert([self safe_reverseKeyTransformationBlockDictionary].count == [self safe_keyTransformationBlockDictionary].count, @"MBJSONSerializable: keyTransformations and reverseKeyTransformations do not match!");
@@ -105,6 +105,27 @@
     }];
     return [dictionaryRepresentation copy];
 }
+
+- (NSDictionary<NSString*, id> *)dictionaryRepresentation {
+    unsigned int outCount, i;
+    objc_property_t *properties = class_copyPropertyList([self class], &outCount);
+    NSMutableDictionary *tempDict = [NSMutableDictionary dictionaryWithCapacity:outCount];
+    for(i = 0; i < outCount; i++) {
+        objc_property_t property = properties[i];
+        const char *propName = property_getName(property);
+        const char *ivar = property_copyAttributeValue(property, "V");
+        const char *dynamic = property_copyAttributeValue(property, "D");
+        const char *readonly = property_copyAttributeValue(property, "R");
+        if(propName && (ivar || (dynamic && !readonly))) {
+            NSString *propertyName = [NSString stringWithUTF8String:propName];
+            id propertyValue = [self valueForKeyPath:propertyName];
+            [tempDict setObject:propertyValue forKey:propertyName];
+        }
+    }
+    free(properties);
+    return [tempDict copy];
+}
+
 
 - (NSDictionary<NSString*, NSString*>*)safe_keyPropertyMappingDictionary {
     if ([self conformsToProtocol:@protocol(MBJSONSerializable)] &&

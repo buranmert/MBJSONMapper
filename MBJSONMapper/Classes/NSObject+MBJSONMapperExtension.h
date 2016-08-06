@@ -11,6 +11,6 @@
 @interface NSObject (MBJSONMapperExtension)
 
 + (instancetype)modelWithDictionary:(NSDictionary *)dictionary;
-- (NSDictionary *)rawDictionaryFromModel;
+- (NSDictionary *)dictionaryFromModel;
 
 @end

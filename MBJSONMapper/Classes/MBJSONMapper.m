@@ -14,14 +14,17 @@
 + (id<MBJSONSerializable>)serializeDictionary:(NSDictionary *)dictionary
                             intoObjectOfClass:(Class<MBJSONSerializable>)objectClass {
     NSAssert([objectClass conformsToProtocol:@protocol(MBJSONSerializable)], @"MBJSONMapper:serializeDictionary:intoObjectOfClass: objectClass does NOT conform to MBJSONSerializable protocol!");
+    
     id newObject = [objectClass performSelector:@selector(modelWithDictionary:) withObject:dictionary];
     return newObject;
 }
 
-+ (NSDictionary *)deserializeObjectIntoDictionary:(id<MBJSONSerializable>)object {
++ (NSDictionary *)deserializeObjectIntoDictionary:(NSObject<MBJSONSerializable> *)object {
+    NSAssert([object conformsToProtocol:@protocol(MBJSONSerializable)], @"MBJSONMapper:deserializeObjectIntoDictionary: object does NOT conform to MBJSONSerializable protocol!");
     NSAssert([object isKindOfClass:[NSObject class]], @"MBJSONMapper:deserializeObjectIntoDictionary object is NOT kind of NSObject class!");
-    NSDictionary *dictionaryRepresentation = [((NSObject<MBJSONSerializable> *)object) rawDictionaryFromModel];
-    return dictionaryRepresentation;
+    
+    NSDictionary *dictionaryFromModel = [((NSObject<MBJSONSerializable> *)object) dictionaryFromModel];
+    return dictionaryFromModel;
 }
 
 @end

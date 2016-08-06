@@ -29,14 +29,7 @@
     [super tearDown];
 }
 
-- (void)testDataModel
-{
-//    @property (nonatomic, copy, readonly) NSString *name;
-//    @property (nonatomic, copy, readonly) NSString *surname;
-//    @property (nonatomic, copy, readonly) NSString *middleName;
-//    
-//    @property (nonatomic, copy, readonly) MBTestDataModel *nestedModel;
-//    @property (nonatomic, copy, readonly) NSArray<MBTestDataModel*> *nestedModels;
+- (void)testDataModel {
     
     NSDictionary *nestedModelDict = dict(@"Nested", @"John", @"");
     NSArray *nestedModelDicts = @[dict(@"John", @"Dupont", @"1"),

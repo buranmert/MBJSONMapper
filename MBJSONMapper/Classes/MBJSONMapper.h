@@ -14,6 +14,6 @@
 + (id<MBJSONSerializable>)serializeDictionary:(NSDictionary *)dictionary
                             intoObjectOfClass:(Class<MBJSONSerializable>)objectClass;
 
-+ (NSDictionary *)deserializeObjectIntoDictionary:(id<MBJSONSerializable>)object;
++ (NSDictionary *)deserializeObjectIntoDictionary:(NSObject<MBJSONSerializable> *)object;
 
 @end

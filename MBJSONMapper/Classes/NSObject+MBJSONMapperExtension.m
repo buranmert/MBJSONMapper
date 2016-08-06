@@ -22,11 +22,11 @@
 
 - (void)configurePropertiesWithDictionary:(NSDictionary<NSString *,id> *)keyedValues {
     if ([self conformsToProtocol:@protocol(MBJSONSerializable)]) {
-        NSDictionary *mappingDictionary = [self safe_keyPropertyMappingDictionary];
+        NSDictionary *mappingDictionary = [self safeProtocolMethod:@selector(keyPropertyMappingDictionary)];
         NSDictionary<NSString *,id> *mappedKeyedValues = mappingDictionary != nil ? mapKeysFromKeyedValues(keyedValues, mappingDictionary) : keyedValues;
-        NSDictionary<NSString*, MBTransformationBlock> *transformationsMap = [self safe_keyTransformationBlockDictionary];
+        NSDictionary<NSString*, MBTransformationBlock> *transformationsMap = [self safeProtocolMethod:@selector(keyTransformationBlockDictionary)];
         for (NSString *key in mappedKeyedValues.allKeys) {
-            if ([[self safe_ignoredKeys] containsObject:key]) {
+            if ([[self safeProtocolMethod:@selector(ignoredKeys)] containsObject:key]) {
                 continue;
             }
             id obj = [mappedKeyedValues objectForKey:key];
@@ -63,7 +63,7 @@
 }
 
 - (id)dataModelFromDictionary:(NSDictionary *)dictionary forKeyPath:(NSString *)keyPath {
-    Class classForDict = [[self safe_keyClassMappingDictionary] objectForKey:keyPath];
+    Class classForDict = [[self safeProtocolMethod:@selector(keyClassMappingDictionary)] objectForKey:keyPath];
     if (classForDict == nil) {
         return dictionary;
     }
@@ -73,7 +73,7 @@
 }
 
 - (NSArray *)dataModelsArrayFromArray:(NSArray *)array forKeyPath:(NSString *)keyPath {
-    if ([[self safe_keyClassMappingDictionary] objectForKey:keyPath] == nil) {
+    if ([[self safeProtocolMethod:@selector(keyClassMappingDictionary)] objectForKey:keyPath] == nil) {
         return array;
     }
     NSMutableArray *newObjects = [NSMutableArray array];
@@ -85,21 +85,26 @@
 
 - (NSDictionary *)dictionaryFromModel {
     NSMutableDictionary *dictionaryRepresentation = [[self dictionaryRepresentation] mutableCopy];
-    [[[self class] safe_keyClassMappingDictionary] enumerateKeysAndObjectsUsingBlock:^(NSString * _Nonnull key, Class  _Nonnull obj, BOOL * _Nonnull stop) {
+    [[self safeProtocolMethod:@selector(keyClassMappingDictionary)] enumerateKeysAndObjectsUsingBlock:^(NSString * _Nonnull key, Class  _Nonnull obj, BOOL * _Nonnull stop) {
         id nestedModel = [self valueForKeyPath:key];
-        NSDictionary *nestedDictionary = [nestedModel respondsToSelector:@selector(dictionaryFromModel)] ? [nestedModel dictionaryFromModel] : [nestedModel dictionaryRepresentation];
-        [dictionaryRepresentation setObject:nestedDictionary forKey:key];
+        if ([nestedModel conformsToProtocol:@protocol(MBJSONSerializable)]) {
+            NSDictionary *nestedDictionary = [nestedModel dictionaryFromModel];
+            [dictionaryRepresentation setObject:nestedDictionary forKey:key];
+        }
     }];
-    NSAssert([self safe_reverseKeyTransformationBlockDictionary].count == [self safe_keyTransformationBlockDictionary].count, @"MBJSONSerializable: keyTransformations and reverseKeyTransformations do not match!");
-    [[self safe_reverseKeyTransformationBlockDictionary] enumerateKeysAndObjectsUsingBlock:^(NSString * _Nonnull key, MBTransformationBlock  _Nonnull obj, BOOL * _Nonnull stop) {
+    [[self safeProtocolMethod:@selector(reverseKeyTransformationBlockDictionary)] enumerateKeysAndObjectsUsingBlock:^(NSString * _Nonnull key, MBTransformationBlock  _Nonnull obj, BOOL * _Nonnull stop) {
         id value = [self valueForKeyPath:key];
-        id newValue = obj(value);
-        [dictionaryRepresentation setObject:newValue forKey:key];
+        if (value != nil) {
+            id newValue = obj(value);
+            [dictionaryRepresentation setObject:newValue forKey:key];
+        }
     }];
-    [[self safe_keyPropertyMappingDictionary] enumerateKeysAndObjectsUsingBlock:^(NSString * _Nonnull key, NSString * _Nonnull obj, BOOL * _Nonnull stop) {
+    [[self safeProtocolMethod:@selector(keyPropertyMappingDictionary)] enumerateKeysAndObjectsUsingBlock:^(NSString * _Nonnull key, NSString * _Nonnull obj, BOOL * _Nonnull stop) {
         if ([key containsString:@"."]) {
             id value = [self valueForKeyPath:obj];
-            [dictionaryRepresentation setObject:value forKey:key];
+            if (value != nil) {
+                [dictionaryRepresentation setObject:value forKey:key];
+            }
         }
         [dictionaryRepresentation removeObjectForKey:obj];
     }];
@@ -119,50 +124,19 @@
         if(propName && (ivar || (dynamic && !readonly))) {
             NSString *propertyName = [NSString stringWithUTF8String:propName];
             id propertyValue = [self valueForKeyPath:propertyName];
-            [tempDict setObject:propertyValue forKey:propertyName];
+            if (propertyValue) {
+                [tempDict setObject:propertyValue forKey:propertyName];
+            }
         }
     }
     free(properties);
     return [tempDict copy];
 }
 
-
-- (NSDictionary<NSString*, NSString*>*)safe_keyPropertyMappingDictionary {
+- (id)safeProtocolMethod:(SEL)selector {
     if ([self conformsToProtocol:@protocol(MBJSONSerializable)] &&
-        [self respondsToSelector:@selector(keyPropertyMappingDictionary)]) {
-        return [((NSObject<MBJSONSerializable> *)self) keyPropertyMappingDictionary];
-    }
-    return nil;
-}
-
-- (NSDictionary<NSString*, Class> *)safe_keyClassMappingDictionary {
-    if ([self conformsToProtocol:@protocol(MBJSONSerializable)] &&
-        [self respondsToSelector:@selector(keyClassMappingDictionary)]) {
-        return [((NSObject<MBJSONSerializable> *)self) keyClassMappingDictionary];
-    }
-    return nil;
-}
-
-- (NSDictionary<NSString*, MBTransformationBlock> *)safe_keyTransformationBlockDictionary {
-    if ([self conformsToProtocol:@protocol(MBJSONSerializable)] &&
-        [self respondsToSelector:@selector(keyTransformationBlockDictionary)]) {
-        return [((NSObject<MBJSONSerializable> *)self) keyTransformationBlockDictionary];
-    }
-    return nil;
-}
-
-- (NSArray<NSString*>*)safe_ignoredKeys {
-    if ([self conformsToProtocol:@protocol(MBJSONSerializable)] &&
-        [self respondsToSelector:@selector(ignoredKeys)]) {
-        return [((NSObject<MBJSONSerializable> *)self) ignoredKeys];
-    }
-    return nil;
-}
-
-- (NSDictionary<NSString*, MBTransformationBlock> *)safe_reverseKeyTransformationBlockDictionary {
-    if ([self conformsToProtocol:@protocol(MBJSONSerializable)] &&
-        [self respondsToSelector:@selector(reverseKeyTransformationBlockDictionary)]) {
-        return [((NSObject<MBJSONSerializable> *)self) reverseKeyTransformationBlockDictionary];
+        [self respondsToSelector:selector]) {
+        return [self performSelector:selector];
     }
     return nil;
 }

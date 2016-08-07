@@ -13,9 +13,12 @@
 @implementation NSObject (MBJSONMapperExtension)
 
 + (instancetype)modelWithDictionary:(NSDictionary *)dictionary {
-    id model = [self new];
-    if (model != nil) {
-        [model configurePropertiesWithDictionary:dictionary];
+    id model = nil;
+    if (dictionary != nil) {
+        model = [self new];
+        if (model != nil) {
+            [model configurePropertiesWithDictionary:dictionary];
+        }
     }
     return model;
 }

@@ -46,6 +46,12 @@
     XCTAssert(deserializedTestModelDict.allKeys.count == testModelDict.allKeys.count);
 }
 
+- (void)testEmptyModel {
+    NSDictionary *nilDict = nil;
+    MBTestDataModel *nilModel = [MBJSONMapper serializeDictionary:nilDict intoObjectOfClass:[MBTestDataModel class]];
+    XCTAssertNil(nilModel);
+}
+
 static NSDictionary* dict(NSString *name, NSString *surname, NSString *middleName) {
     return @{@"name": name,
              @"surname": surname,

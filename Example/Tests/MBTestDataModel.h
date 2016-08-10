@@ -20,4 +20,6 @@
 @property (nonatomic, copy, readonly) MBTestDataModel *nestedModel;
 @property (nonatomic, copy, readonly) NSArray<MBTestDataModel*> *nestedModels;
 
+@property (nonatomic, copy, readonly) NSMutableArray *mutableArray;
+
 @end

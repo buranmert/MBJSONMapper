@@ -66,6 +66,9 @@
             id newObject = nil;
             if (transformationBlock == nil) {
                 newObject = [self dataModelFromObject:obj forKeyPath:key];
+                if ([newObject conformsToProtocol:@protocol(NSCopying)]) {
+                    newObject = [newObject copy];
+                }
             }
             else {
                 newObject = transformationBlock(obj);

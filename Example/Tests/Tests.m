@@ -55,6 +55,19 @@
     XCTAssertNil(nilModel);
 }
 
+- (void)testMutableProperty {
+    NSMutableDictionary *mutableTestModelDict = [dict(@"John", @"Appleseed", @"Hatice") mutableCopy];
+    NSMutableArray *testMutableArray = [NSMutableArray arrayWithObject:@"mutable 1"];
+    [mutableTestModelDict setObject:testMutableArray forKey:@"mutableArray"];
+    NSArray *control1 = [testMutableArray copy];
+    MBTestSubclassDataModel *testModel = [MBJSONMapper serializeDictionary:[mutableTestModelDict copy]
+                                                         intoObjectOfClass:[MBTestSubclassDataModel class]];
+    [testMutableArray addObject:@"mutable 2"];
+    NSArray *control2 = [testMutableArray copy];
+    XCTAssert(testModel.mutableArray.count == control1.count, @"count: %lu", (unsigned long)testModel.mutableArray.count);
+    XCTAssert(testModel.mutableArray.count != control2.count, @"count: %lu", (unsigned long)testModel.mutableArray.count);
+}
+
 static NSDictionary* dict(NSString *name, NSString *surname, NSString *middleName) {
     return @{@"name": name,
              @"surname": surname,

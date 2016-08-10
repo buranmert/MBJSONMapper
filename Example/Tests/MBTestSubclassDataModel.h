@@ -11,5 +11,6 @@
 @interface MBTestSubclassDataModel : MBTestDataModel
 
 @property (nonatomic, copy, readonly) NSString *subclassName;
+@property (nonatomic, copy, readonly) NSString *wrongName;
 
 @end

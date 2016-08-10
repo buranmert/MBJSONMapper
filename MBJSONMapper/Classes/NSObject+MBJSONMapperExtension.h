@@ -8,9 +8,16 @@
 
 #import <Foundation/Foundation.h>
 
-@interface NSObject (MBJSONMapperExtension)
+NS_ASSUME_NONNULL_BEGIN
 
-+ (instancetype)modelWithDictionary:(NSDictionary *)dictionary;
-- (NSDictionary *)dictionaryFromModel;
+@protocol MBObject <NSObject>
+
++ (instancetype)mb_modelWithDictionary:(NSDictionary<NSString *,id>*)dictionary;
+- (NSDictionary<NSString *,id>*)mb_dictionaryFromModel;
 
 @end
+
+@interface NSObject (MBJSONMapperExtension) <MBObject>
+@end
+
+NS_ASSUME_NONNULL_END

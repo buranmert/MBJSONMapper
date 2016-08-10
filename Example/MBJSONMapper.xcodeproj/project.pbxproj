@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		3052A1521D4E73CE00B5418F /* MBTestDataModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 3052A1511D4E73CE00B5418F /* MBTestDataModel.m */; };
+		307D0B891D5B3C330056C1BE /* MBTestSubclassDataModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 307D0B881D5B3C330056C1BE /* MBTestSubclassDataModel.m */; };
 		338E7D9194FD671206E4D808 /* Pods_MBJSONMapper_Tests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D805BB0836228251F6C9BCDD /* Pods_MBJSONMapper_Tests.framework */; };
 		6003F5B0195388D20070C39A /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6003F5AF195388D20070C39A /* XCTest.framework */; };
 		6003F5B1195388D20070C39A /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6003F58D195388D20070C39A /* Foundation.framework */; };
@@ -19,6 +20,8 @@
 /* Begin PBXFileReference section */
 		3052A1501D4E73CE00B5418F /* MBTestDataModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MBTestDataModel.h; sourceTree = "<group>"; };
 		3052A1511D4E73CE00B5418F /* MBTestDataModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MBTestDataModel.m; sourceTree = "<group>"; };
+		307D0B871D5B3C330056C1BE /* MBTestSubclassDataModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MBTestSubclassDataModel.h; sourceTree = "<group>"; };
+		307D0B881D5B3C330056C1BE /* MBTestSubclassDataModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MBTestSubclassDataModel.m; sourceTree = "<group>"; };
 		6003F58D195388D20070C39A /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		6003F58F195388D20070C39A /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		6003F591195388D20070C39A /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
@@ -89,6 +92,8 @@
 				6003F5B6195388D20070C39A /* Supporting Files */,
 				3052A1501D4E73CE00B5418F /* MBTestDataModel.h */,
 				3052A1511D4E73CE00B5418F /* MBTestDataModel.m */,
+				307D0B871D5B3C330056C1BE /* MBTestSubclassDataModel.h */,
+				307D0B881D5B3C330056C1BE /* MBTestSubclassDataModel.m */,
 			);
 			path = Tests;
 			sourceTree = "<group>";
@@ -244,6 +249,7 @@
 			files = (
 				3052A1521D4E73CE00B5418F /* MBTestDataModel.m in Sources */,
 				6003F5BC195388D20070C39A /* Tests.m in Sources */,
+				307D0B891D5B3C330056C1BE /* MBTestSubclassDataModel.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

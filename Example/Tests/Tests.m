@@ -9,7 +9,7 @@
 @import XCTest;
 
 #import <MBJSONMapper/MBJSONMapper.h>
-#import "MBTestDataModel.h"
+#import "MBTestSubclassDataModel.h"
 
 @interface Tests : XCTestCase
 
@@ -38,12 +38,15 @@
     NSMutableDictionary *mutableTestModelDict = [dict(@"John", @"Appleseed", @"Hatice") mutableCopy];
     [mutableTestModelDict setObject:nestedModelDict forKey:@"nestedModel"];
     [mutableTestModelDict setObject:nestedModelDicts forKey:@"nestedModels"];
+    [mutableTestModelDict setObject:@"subclass name" forKey:@"subclassName"];
     NSDictionary *testModelDict = [mutableTestModelDict copy];
-    MBTestDataModel *testModel = [MBJSONMapper serializeDictionary:testModelDict intoObjectOfClass:[MBTestDataModel class]];
+    MBTestSubclassDataModel *testModel = [MBJSONMapper serializeDictionary:testModelDict
+                                                         intoObjectOfClass:[MBTestSubclassDataModel class]];
     XCTAssertNotNil(testModel);
     XCTAssert([testModel.name isEqualToString:@"John"]);
     NSDictionary *deserializedTestModelDict = [MBJSONMapper deserializeObjectIntoDictionary:testModel];
     XCTAssert(deserializedTestModelDict.allKeys.count == testModelDict.allKeys.count);
+    XCTAssert([[deserializedTestModelDict objectForKey:@"subclassName"] isEqualToString:@"subclass name"], @"subclass name: %@", [deserializedTestModelDict objectForKey:@"subclassName"]);
 }
 
 - (void)testEmptyModel {

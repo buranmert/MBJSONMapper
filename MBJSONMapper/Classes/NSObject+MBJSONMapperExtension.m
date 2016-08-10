@@ -87,7 +87,7 @@
 }
 
 - (NSDictionary *)dictionaryFromModel {
-    NSMutableDictionary *dictionaryRepresentation = [[self dictionaryRepresentation] mutableCopy];
+    NSMutableDictionary *dictionaryRepresentation = [self dictionaryRepresentation];
     [[self safe_keyClassMappingDictionary] enumerateKeysAndObjectsUsingBlock:^(NSString * _Nonnull key, Class  _Nonnull obj, BOOL * _Nonnull stop) {
         id nestedModel = [self valueForKeyPath:key];
         if ([nestedModel conformsToProtocol:@protocol(MBJSONSerializable)]) {
@@ -114,9 +114,19 @@
     return [dictionaryRepresentation copy];
 }
 
-- (NSDictionary<NSString*, id> *)dictionaryRepresentation {
+- (NSMutableDictionary<NSString*, id> *)dictionaryRepresentation {
+    Class class = self.class;
+    NSMutableDictionary *recursiveDictionaryRepresentation = [NSMutableDictionary dictionary];
+    while (class != NSObject.class) {
+        [recursiveDictionaryRepresentation addEntriesFromDictionary:[self dictionaryRepresentationForSubclass:class]];
+        class = class.superclass;
+    }
+    return recursiveDictionaryRepresentation;
+}
+
+- (NSDictionary<NSString*, id> *)dictionaryRepresentationForSubclass:(Class)subclass {
     unsigned int outCount, i;
-    objc_property_t *properties = class_copyPropertyList([self class], &outCount);
+    objc_property_t *properties = class_copyPropertyList(subclass, &outCount);
     NSMutableDictionary *tempDict = [NSMutableDictionary dictionaryWithCapacity:outCount];
     for(i = 0; i < outCount; i++) {
         objc_property_t property = properties[i];

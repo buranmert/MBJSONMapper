@@ -1,5 +1,5 @@
 PODS:
-  - MBJSONMapper (0.2.0)
+  - MBJSONMapper (0.2.4)
 
 DEPENDENCIES:
   - MBJSONMapper (from `../`)
@@ -9,7 +9,7 @@ EXTERNAL SOURCES:
     :path: "../"
 
 SPEC CHECKSUMS:
-  MBJSONMapper: 5abace6cc4397e8c406e77e257865c58ad383e84
+  MBJSONMapper: adfddff5f5249d12419e75c911b253194d6a13af
 
 PODFILE CHECKSUM: 6a9f82b3e819ee7f63203c0b69244c6f48382e0a
 

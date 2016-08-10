@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name             = 'MBJSONMapper'
-  s.version          = '0.2.4'
+  s.version          = '0.2.5'
   s.summary          = 'Light-weight JSON to and from Object mapper'
 
   s.description      = 'There are plenty of JSON mapping libraries but most of them are not light enough. I tried to do it as simple as it can be'

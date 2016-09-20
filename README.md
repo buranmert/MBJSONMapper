@@ -1,5 +1,7 @@
 # MBJSONMapper
 
+[![Join the chat at https://gitter.im/MBJSONMapper/Lobby](https://badges.gitter.im/MBJSONMapper/Lobby.svg)](https://gitter.im/MBJSONMapper/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 [![CI Status](http://img.shields.io/travis/buranmert/MBJSONMapper.svg?style=flat)](https://travis-ci.org/buranmert/MBJSONMapper)
 [![Version](https://img.shields.io/cocoapods/v/MBJSONMapper.svg?style=flat)](http://cocoapods.org/pods/MBJSONMapper)
 [![License](https://img.shields.io/cocoapods/l/MBJSONMapper.svg?style=flat)](http://cocoapods.org/pods/MBJSONMapper)
